@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/Home.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import Login from "@/views/auth/Login.vue";
-import Register from "@/views/auth/Register.vue";
 import ForgotPassword from "@/views/auth/ForgotPassword.vue";
 import ResetPassword from "@/views/auth/ResetPassword.vue";
 import Register from "@/views/auth/Register.vue";

@@ -46,7 +46,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 'success',
                 'user' => $user,
-                'token' => $token
+                'authToken' => $token
             ]);
         } catch (\Exception $e) {
             return response()->json([

@@ -1,22 +1,28 @@
+<!-- Dashboard.vue -->
 <template>
-  <div class="flex flex-col min-h-screen bg-gray-50">
-    <TopNav class="sticky top-0 z-10" />
-    <div class="flex flex-1 flex-col md:flex-row">
-      <Sidebar class="w-full md:w-64 flex-shrink-0" />
-      <main class="flex-1 p-4 md:p-8 overflow-y-auto">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <Card v-for="card in cards" :key="card.title" class="shadow-lg">
-            <template #title>{{ card.title }}</template>
-            <template #content>
-              <div class="text-3xl font-bold text-primary-600">{{ card.value }}</div>
-              <div class="text-sm text-gray-500">{{ card.subtitle }}</div>
-            </template>
-          </Card>
-        </div>
-        <div class="bg-white rounded-lg shadow-lg p-4">
-          <h2 class="text-lg font-semibold mb-4">Overview</h2>
+  <div class="app-wrapper">
+    <TopNav @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+    <div class="flex flex-1">
+      <Sidebar :open="sidebarOpen" />
+      <main class="main-panel">
+        <!-- KPI Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div
+            v-for="(c, i) in cards"
+            :key="i"
+            class="kpi-card"
+          >
+            <h3>{{ c.title }}</h3>
+            <p class="value">{{ c.value }}</p>
+            <span class="subtitle">{{ c.subtitle }}</span>
+          </div>
+        </section>
+
+        <!-- Chart -->
+        <section class="chart-card">
+          <h2 class="section-title">Sales Overview</h2>
           <Bar :data="chartData" :options="chartOptions" />
-        </div>
+        </section>
       </main>
     </div>
   </div>
@@ -24,10 +30,8 @@
 
 <script setup>
 import { ref } from 'vue';
-import { useUserStore } from '@/store/useUserStore';
 import Sidebar from '@/components/common/Sidebar.vue';
 import TopNav from '@/components/common/TopNav.vue';
-import Card from 'primevue/card';
 import { Bar } from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -38,15 +42,14 @@ import {
   CategoryScale,
   LinearScale
 } from 'chart.js';
-
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
-const userStore = useUserStore();
+const sidebarOpen = ref(false);
 
 const cards = ref([
-  { title: 'Users', value: 1200, subtitle: 'Active this month' },
-  { title: 'Sales', value: '$34,000', subtitle: 'Total revenue' },
-  { title: 'Growth', value: '12%', subtitle: 'Monthly increase' },
+  { title: 'Users', value: '1 200', subtitle: 'Active this month' },
+  { title: 'Sales', value: '$34 k', subtitle: 'Total revenue' },
+  { title: 'Growth', value: '+12 %', subtitle: 'MoM increase' },
 ]);
 
 const chartData = ref({
@@ -54,28 +57,44 @@ const chartData = ref({
   datasets: [
     {
       label: 'Sales',
+      data: [12, 15, 14, 18, 17, 20],
       backgroundColor: '#6366f1',
-      data: [12000, 15000, 14000, 18000, 17000, 20000],
       borderRadius: 8,
-    },
-  ],
+      barThickness: 20
+    }
+  ]
 });
 
 const chartOptions = ref({
   responsive: true,
-  plugins: {
-    legend: { display: false },
-    title: { display: false },
-  },
+  plugins: { legend: { display: false } },
   scales: {
     x: { grid: { display: false } },
-    y: { beginAtZero: true, grid: { color: '#f3f4f6' } },
-  },
+    y: { beginAtZero: true, grid: { color: '#ffffff10' } }
+  }
 });
 </script>
 
 <style scoped>
-main {
-  min-height: 80vh;
+.app-wrapper {
+  @apply flex flex-col min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black;
+}
+.main-panel {
+  @apply flex-1 p-6 lg:p-8 overflow-y-auto;
+}
+.kpi-card {
+  @apply bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-lg shadow-lg hover:shadow-indigo-500/20 transition-all duration-300;
+}
+.kpi-card .value {
+  @apply text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400;
+}
+.kpi-card .subtitle {
+  @apply text-sm text-gray-400 mt-1;
+}
+.chart-card {
+  @apply bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-lg shadow-lg;
+}
+.section-title {
+  @apply text-lg font-semibold text-gray-100 mb-4;
 }
 </style>

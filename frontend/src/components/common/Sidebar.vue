@@ -1,57 +1,73 @@
+<!-- Sidebar.vue -->
 <template>
-  <aside class="bg-white shadow h-full w-full md:w-64 flex flex-col py-6 px-4 min-h-screen">
-    <div class="flex flex-col items-center mb-10">
-      <i class="pi pi-chart-bar text-primary text-3xl mb-2"></i>
-      <span class="font-bold text-xl text-primary mb-4">My Dashboard</span>
-      <img src="https://i.pravatar.cc/150?img=3" class="rounded-full w-20 h-20 mb-2 border-4 border-primary-100" alt="User" />
-      <span class="font-semibold text-lg">John Doe</span>
-      <span class="text-xs text-gray-400">Admin</span>
+  <aside
+    :class="[
+      'sidebar',
+      open && 'open'
+    ]"
+  >
+    <div class="brand">
+      <i class="pi pi-chart-bar text-3xl text-indigo-400"></i>
+      <span class="font-bold text-xl text-white">My Dashboard</span>
     </div>
-    <nav class="flex-1 w-full">
-      <ul class="space-y-2">
-        <li>
-          <router-link to="/dashboard" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-primary-50 transition font-medium text-gray-700">
-            <i class="pi pi-home text-lg"></i> Dashboard
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/users" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-primary-50 transition font-medium text-gray-700">
-            <i class="pi pi-users text-lg"></i> Users
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/reports" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-primary-50 transition font-medium text-gray-700">
-            <i class="pi pi-chart-line text-lg"></i> Reports
-          </router-link>
-        </li>
-        <li>
-          <router-link to="/settings" class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-primary-50 transition font-medium text-gray-700">
-            <i class="pi pi-cog text-lg"></i> Settings
-          </router-link>
-        </li>
-      </ul>
+
+    <div class="profile">
+      <img
+        src="https://i.pravatar.cc/150?img=3"
+        alt="User"
+        class="avatar"
+      />
+      <span class="name">John Doe</span>
+      <span class="role">Admin</span>
+    </div>
+
+    <nav>
+      <router-link to="/dashboard" class="nav-link">
+        <i class="pi pi-home"></i> Dashboard
+      </router-link>
+      <router-link to="/users" class="nav-link">
+        <i class="pi pi-users"></i> Users
+      </router-link>
+      <router-link to="/reports" class="nav-link">
+        <i class="pi pi-chart-line"></i> Reports
+      </router-link>
+      <router-link to="/settings" class="nav-link">
+        <i class="pi pi-cog"></i> Settings
+      </router-link>
     </nav>
   </aside>
 </template>
 
 <script setup>
-// No longer using PanelMenu or Avatar components
+defineProps({ open: Boolean });
 </script>
 
 <style scoped>
-@media (max-width: 768px) {
-  aside {
-    position: fixed;
-    z-index: 30;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    width: 70vw;
-    transform: translateX(-100%);
-    transition: transform 0.3s;
-  }
-  aside.open {
-    transform: translateX(0);
-  }
+.sidebar {
+  @apply bg-black/30 backdrop-blur-md border-r border-white/10 w-64 flex-shrink-0 flex flex-col py-6 px-5 fixed md:sticky top-0 h-screen z-30 transition-transform duration-300 -translate-x-full md:translate-x-0;
+}
+.sidebar.open {
+  @apply translate-x-0;
+}
+.brand {
+  @apply flex items-center gap-3 mb-8;
+}
+.profile {
+  @apply flex flex-col items-center mb-10;
+}
+.avatar {
+  @apply w-20 h-20 rounded-full border-4 border-indigo-400 mb-2;
+}
+.name {
+  @apply font-semibold text-white text-lg;
+}
+.role {
+  @apply text-xs text-gray-400;
+}
+.nav-link {
+  @apply flex items-center gap-3 px-4 py-3 rounded-lg text-gray-200 hover:bg-white/10 transition;
+}
+.router-link-active {
+  @apply bg-indigo-500 text-white shadow-lg shadow-indigo-500/40;
 }
 </style>

@@ -1,97 +1,45 @@
-<script setup>
-import { ref } from "vue";
-import { useUserStore } from "@/store/useUserStore";
-import { useRouter } from "vue-router";
-
-const userStore = useUserStore();
-const router = useRouter();
-const formData = ref({
-  email: "",
-  password: "",
-});
-const isLoading = ref(false);
-const errorMsg = ref("");
-const showPassword = ref(false);
-
-const validate = () => {
-  if (!formData.value.email || !formData.value.password) {
-    errorMsg.value = "Email and password are required.";
-    return false;
-  }
-  errorMsg.value = "";
-  return true;
-};
-
-const loginUser = async () => {
-  if (!validate()) return;
-  try {
-    isLoading.value = true;
-    await userStore.login(formData.value);
-    if(userStore.isAuthenticated){
-          isLoading.value = false;
-      router.push("/app/");
-    }else{
-        isLoading.value = false;
-        errorMsg.value = "Invalid credentials. Please try again.";
-    }
-  } catch (error) {
-    isLoading.value = false;
-    errorMsg.value = "Login failed. Please check your credentials.";
-  }
-};
-</script>
-
+<!-- LoginPage.vue -->
 <template>
-  <div class="w-full flex flex-col items-center">
-    <!-- Brand/Logo Area -->
-    <div class="mb-6 flex flex-col items-center">
-      <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center shadow-lg mb-2 animate-fade-in">
-        <svg class="w-10 h-10 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" />
-          <path d="M8 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </div>
-      <span class="text-xl font-bold text-indigo-700 tracking-wide">Acme Corp</span>
+  <div>
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-indigo-400 text-center mb-1">Sign in to your account</h2>
+      <p class="text-indigo-300 text-center text-sm">Welcome back! Please enter your credentials.</p>
     </div>
-    <h2 class="text-3xl font-extrabold text-center text-indigo-800 mb-2 tracking-tight animate-fade-in">Welcome Back</h2>
-    <p class="text-center text-gray-500 mb-8 animate-fade-in">Sign in to your account</p>
-    <form @submit.prevent="loginUser" class="space-y-6 w-full animate-fade-in-slow">
+    <form @submit.prevent="handleSubmit" class="space-y-5">
+      <!-- Email Field with Icon -->
       <div class="relative">
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M16 4H8a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2z"/>
+            <path d="M22 6l-10 7L2 6"/>
+          </svg>
+        </span>
         <input
-          v-model="formData.email"
+          v-model="email"
           type="email"
-          id="email"
-          name="email"
+          class="pl-10 w-full bg-white/80 border border-white/30 rounded-lg py-3 text-gray-900 placeholder-gray-600 focus:ring-2 focus:ring-pink-400 focus:outline-none shadow-[2px_2px_8px_#00000030,-2px_-2px_8px_#ffffff10]"
+          placeholder="you@example.com"
           required
-          class="peer w-full px-4 pt-6 pb-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white/70 backdrop-blur placeholder-transparent transition"
-          placeholder="Email address"
-          autocomplete="email"
         />
-        <label
-          for="email"
-          class="absolute left-4 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-sm pointer-events-none"
-          >Email address</label
-        >
+        <p v-if="emailError" class="text-red-400 text-xs mt-1 ml-1">{{ emailError }}</p>
       </div>
+      <!-- Password Field with Icon -->
       <div class="relative">
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-indigo-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="11" width="18" height="10" rx="2"/>
+            <path d="M7 11V7a5 5 0 0110 0v4"/>
+          </svg>
+        </span>
         <input
-          v-model="formData.password"
+          v-model="password"
           :type="showPassword ? 'text' : 'password'"
-          id="password"
-          name="password"
+          class="pl-10 w-full bg-white/80 border border-white/30 rounded-lg py-3 text-gray-900 placeholder-gray-600 focus:ring-2 focus:ring-pink-400 focus:outline-none shadow-[2px_2px_8px_#00000030,-2px_-2px_8px_#ffffff10]"
+          placeholder="••••••••"
           required
-          class="peer w-full px-4 pt-6 pb-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 bg-white/70 backdrop-blur placeholder-transparent transition pr-12"
-          placeholder="Password"
-          autocomplete="current-password"
         />
-        <label
-          for="password"
-          class="absolute left-4 top-2 text-gray-500 text-sm transition-all peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-sm pointer-events-none"
-          >Password</label
-        >
-        <!-- Password visibility toggle -->
-        <button type="button" @click="showPassword = !showPassword" tabindex="-1"
-          class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-600 focus:outline-none">
+        <!-- Show/hide password toggle -->
+        <button type="button" @click="showPassword = !showPassword" :aria-label="showPassword ? 'Hide password' : 'Show password'" class="absolute right-3 top-1/2 -translate-y-1/2 text-indigo-300 hover:text-white focus:outline-none">
           <svg v-if="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
             <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -101,76 +49,133 @@ const loginUser = async () => {
             <path d="M3 3l18 18" stroke-linecap="round"/>
           </svg>
         </button>
+        <p v-if="passwordError" class="text-red-400 text-xs mt-1 ml-1">{{ passwordError }}</p>
       </div>
-      <div class="flex items-center justify-between">
-        <router-link
-          to="/auth/forgot-password"
-          class="text-indigo-600 hover:underline text-sm font-medium transition-colors"
-          >Forgot password?</router-link
-        >
+      <!-- Remember me and Forgot password -->
+      <div class="flex items-center justify-between mb-2">
+        <label class="flex items-center gap-2 text-gray-200 text-sm select-none">
+          <input type="checkbox" v-model="rememberMe" class="accent-indigo-500 rounded focus:ring-2 focus:ring-indigo-400" />
+          Remember me
+        </label>
+        <router-link to="/auth/forgot-password" class="text-indigo-300 text-sm font-semibold hover:text-white focus:underline">Forgot password?</router-link>
       </div>
-      <button
-        type="submit"
-        class="relative w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-400 text-white font-bold py-3 rounded-lg transition disabled:opacity-60 disabled:cursor-not-allowed shadow-lg overflow-hidden"
-        :disabled="isLoading"
-      >
-        <span v-if="!isLoading" class="flex items-center gap-2">
-          <svg
-            class="w-5 h-5 mr-1"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 17v1m-6-4V9a6 6 0 1112 0v5m-6 4h6a2 2 0 002-2v-5a2 2 0 00-2-2H6a2 2 0 00-2 2v5a2 2 0 002 2h6z"
-            />
-          </svg>
-          Sign In
-        </span>
-        <span v-else class="w-full flex items-center justify-center">
-          <span class="shimmer-loader h-5 w-5 rounded-full mr-2"></span>
-          Signing in...
-        </span>
+      <!-- Error Message (general) -->
+      <div v-if="errorMsg" class="text-red-400 text-center mb-2">{{ errorMsg }}</div>
+      <button type="submit" :disabled="loading" class="w-full bg-gradient-to-r from-indigo-500 to-pink-500 py-2 rounded-lg font-bold text-white shadow-lg hover:from-indigo-600 hover:to-pink-600 focus:ring-2 focus:ring-pink-400 transition flex items-center justify-center">
+        <span v-if="loading" class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></span>
+        {{ loading ? 'Signing in…' : 'Sign In' }}
       </button>
-      <div v-if="errorMsg" class="text-red-600 text-center mt-2 animate-fade-in">{{ errorMsg }}</div>
+      <p class="hint mt-6 text-center text-gray-200 text-sm">
+        Need an account?
+        <router-link to="/auth/register" class="font-semibold underline text-indigo-300 hover:text-white">Create one</router-link>
+      </p>
     </form>
-    <div class="mt-8 text-center text-gray-500 animate-fade-in-slow">
-      Don’t have an account?
-      <router-link
-        to="/register"
-        class="text-indigo-600 hover:underline font-medium transition-colors"
-        >Sign up</router-link
-      >
-    </div>
   </div>
 </template>
 
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRouter} from "vue-router";
+import { useUserStore } from "@/store/useUserStore";
+
+
+const userStore = useUserStore();
+const router = useRouter();
+
+const email = ref("");
+const password = ref("");
+const loading = ref(false);
+const showPassword = ref(false);
+const emailError = ref("");
+const passwordError = ref("");
+const errorMsg = ref("");
+const rememberMe = ref(false);
+
+const handleSubmit = async () => {
+  emailError.value = "";
+  passwordError.value = "";
+  errorMsg.value = "";
+
+  if (!email.value) {
+    emailError.value = "Email is required.";
+    return;
+  }
+  if (!/^\S+@\S+\.\S+$/.test(email.value)) {
+    emailError.value = "Please enter a valid email address.";
+    return;
+  }
+  if (!password.value) {
+    passwordError.value = "Password is required.";
+    return;
+  }
+
+  loading.value = true;
+  try {
+    const formData = {
+      email: email.value.trim(),
+      password: password.value,
+      rememberMe: rememberMe.value,
+    };
+    const response = await userStore.login(formData);
+    if (response && userStore.isAuthenticated === true && response.status === 200) {
+      router.push("/app");
+    } else {
+      errorMsg.value = "Login failed. Please check your credentials.";
+    }
+  } catch (err) {
+    errorMsg.value = "An error occurred. Please try again.";
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  if (window.particlesJS) {
+    window.particlesJS("particles-js", {
+      particles: {
+        number: { value: 40 },
+        color: { value: "#ffffff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.5 },
+        size: { value: 3, random: true },
+        line_linked: {
+          enable: true,
+          distance: 150,
+          color: "#ffffff",
+          opacity: 0.2,
+          width: 1,
+        },
+        move: {
+          enable: true,
+          speed: 2,
+          direction: "none",
+          random: false,
+          straight: false,
+          out_mode: "out",
+          bounce: false,
+        },
+      },
+      interactivity: {
+        detect_on: "canvas",
+        events: {
+          onhover: { enable: true, mode: "repulse" },
+          resize: true,
+        },
+      },
+    });
+  }
+});
+</script>
+
 <style scoped>
-.shimmer-loader {
-  display: inline-block;
-  background: linear-gradient(90deg, #e0e7ff 25%, #c7d2fe 50%, #e0e7ff 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.2s infinite linear;
-}
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-@keyframes fade-in {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: none; }
-}
-.animate-fade-in {
-  animation: fade-in 0.7s cubic-bezier(.4,0,.2,1) both;
-}
-.animate-fade-in-slow {
-  animation: fade-in 1.2s cubic-bezier(.4,0,.2,1) both;
-}
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+* { box-sizing: border-box; }
+body, html, #app { margin: 0; height: 100%; font-family: "Poppins", sans-serif; }
+.login-wrapper { position: relative; width: 100vw; height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.particles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.card { position: relative; animation: fadeIn 0.7s ease forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+.hint a { color: #fff; font-weight: 600; text-decoration: none; }
+.hint a:hover { text-decoration: underline; }
+@media (max-width: 480px) { .card { margin: 0 20px; padding: 30px 20px; } }
 </style>

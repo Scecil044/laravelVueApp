@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,12 @@ Route::post('/auth/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/auth/resetPassword', [AuthController::class, 'resetPassword'])->name('resetPassword');
 Route::post('/auth/forgotPassword', [AuthController::class, 'forgotPassword'])->name('forgotPassword');
 
+// Protected user info route
+Route::middleware('auth:sanctum')->get('/auth/user', function (Request $request) {
+    return response()->json([
+        'user' => $request->user()
+    ]);
+});
 
 /**
  * =============================================================================
@@ -33,8 +40,11 @@ Route::get('/roles/{id}', [RoleController::class, 'getRoleById']);
 Route::put('/roles/{id}', [RoleController::class, 'updateRole']);
 Route::delete('/roles/{id}', [RoleController::class, 'deleteRole']);
 
-Route::get('/users', [\App\Http\Controllers\UserController::class, 'index']);
-Route::get('/users/{id}', [\App\Http\Controllers\UserController::class, 'show']);
-Route::post('/users', [\App\Http\Controllers\UserController::class, 'store']);
-Route::put('/users/{id}', [\App\Http\Controllers\UserController::class, 'update']);
-Route::delete('/users/{id}', [\App\Http\Controllers\UserController::class, 'destroy']);
+// Protected user routes
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/users', [\App\Http\Controllers\UserController::class, 'index']);
+    Route::get('/users/{id}', [\App\Http\Controllers\UserController::class, 'show']);
+    Route::post('/users', [\App\Http\Controllers\UserController::class, 'store']);
+    Route::put('/users/{id}', [\App\Http\Controllers\UserController::class, 'update']);
+    Route::delete('/users/{id}', [\App\Http\Controllers\UserController::class, 'destroy']);
+});

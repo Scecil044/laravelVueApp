@@ -17,6 +17,9 @@ use App\Http\Controllers\RoleController;
 
 Route::post("/auth/register", [AuthController::class, "register"])->name("register");
 Route::post('/auth/login', [AuthController::class, 'login'])->name('login');
+Route::post('/auth/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/auth/resetPassword', [AuthController::class, 'resetPassword'])->name('resetPassword');
+Route::post('/auth/forgotPassword', [AuthController::class, 'forgotPassword'])->name('forgotPassword');
 
 
 /**

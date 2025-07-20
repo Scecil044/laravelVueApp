@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import axios from "axios";
 
 const formData = ref({ email: "" });
 const isLoading = ref(false);
@@ -19,14 +20,13 @@ const submitForgot = async () => {
   if (!validate()) return;
   try {
     isLoading.value = true;
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1200));
+    const response = await axios.post("/auth/forgotPassword", { email: formData.value.email });
     isLoading.value = false;
-    successMsg.value = "If your email exists, a reset link has been sent.";
+    successMsg.value = response.data.message || "If your email exists, a reset link has been sent.";
     errorMsg.value = "";
   } catch (error) {
     isLoading.value = false;
-    errorMsg.value = "Failed to send reset link. Please try again.";
+    errorMsg.value = error.response?.data?.error || "Failed to send reset link. Please try again.";
     successMsg.value = "";
   }
 };
@@ -73,7 +73,7 @@ const submitForgot = async () => {
     </form>
     <div class="mt-8 text-center text-gray-500">
       Remembered your password?
-      <router-link to="/login" class="text-indigo-600 hover:underline font-medium">Sign in</router-link>
+      <router-link to="/auth/login" class="text-indigo-600 hover:underline font-medium">Sign in</router-link>
     </div>
   </div>
 </template>

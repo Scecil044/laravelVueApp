@@ -1,24 +1,45 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import { useRoute, useRouter } from "vue-router";
+
+const route = useRoute();
+const router = useRouter();
 
 const formData = ref({
+  email: "",
   password: "",
-  confirmPassword: "",
+  password_confirmation: "",
+  token: "",
+});
+
+onMounted(() => {
+  // Get token and email from URL query parameters
+  formData.value.token = route.query.token || "";
+  formData.value.email = route.query.email || "";
+  
+  if (!formData.value.token || !formData.value.email) {
+    errorMsg.value = "Invalid password reset link. Please request a new one.";
+  }
 });
 const isLoading = ref(false);
 const errorMsg = ref("");
 const successMsg = ref("");
 
 const validate = () => {
-  if (!formData.value.password || !formData.value.confirmPassword) {
-    errorMsg.value = "Both fields are required.";
+  if (!formData.value.email || !formData.value.token) {
+    errorMsg.value = "Invalid reset link. Please request a new one.";
+    return false;
+  }
+  if (!formData.value.password || !formData.value.password_confirmation) {
+    errorMsg.value = "Both password fields are required.";
     return false;
   }
   if (formData.value.password.length < 8) {
     errorMsg.value = "Password must be at least 8 characters.";
     return false;
   }
-  if (formData.value.password !== formData.value.confirmPassword) {
+  if (formData.value.password !== formData.value.password_confirmation) {
     errorMsg.value = "Passwords do not match.";
     return false;
   }
@@ -30,14 +51,18 @@ const submitReset = async () => {
   if (!validate()) return;
   try {
     isLoading.value = true;
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1200));
+    const response = await axios.post("/auth/resetPassword", formData.value);
     isLoading.value = false;
-    successMsg.value = "Your password has been reset! You can now sign in.";
+    successMsg.value = response.data.message || "Your password has been reset! You can now sign in.";
     errorMsg.value = "";
+    
+    // Redirect to login page after 2 seconds
+    setTimeout(() => {
+      router.push("/auth/login");
+    }, 2000);
   } catch (error) {
     isLoading.value = false;
-    errorMsg.value = "Failed to reset password. Please try again.";
+    errorMsg.value = error.response?.data?.error || "Failed to reset password. Please try again.";
     successMsg.value = "";
   }
 };
@@ -67,7 +92,7 @@ const submitReset = async () => {
       </div>
       <div class="relative">
         <input
-          v-model="formData.confirmPassword"
+          v-model="formData.password_confirmation"
           type="password"
           id="confirmPassword"
           name="confirmPassword"

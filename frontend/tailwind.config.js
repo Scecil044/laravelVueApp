@@ -10,6 +10,7 @@ export default {
     extend: {
       colors: {
         'dark-bg': '#18181b',
+        'brand': '#dd0531',
       },
     },
   },

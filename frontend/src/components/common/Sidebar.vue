@@ -2,73 +2,83 @@
 <template>
   <aside
     :class="[
-      'sidebar',
-      open && 'open',
+      'w-64 flex-shrink-0 flex flex-col py-6 px-5 fixed md:sticky top-0 h-screen z-30 transition-transform duration-300 -translate-x-full md:translate-x-0',
+      open && 'translate-x-0',
       'bg-white border-r border-gray-200 dark:bg-dark-bg dark:border-white/10'
     ]"
   >
-    <div class="brand">
-      <i class="pi pi-chart-bar text-3xl text-indigo-400"></i>
-      <span class="font-bold text-xl text-gray-900 dark:text-white">My Dashboard</span>
+    <div class="flex items-center gap-3 mb-10">
+      <i class="pi pi-chart-bar text-3xl text-brand"></i>
+      <span class="font-bold text-base text-gray-900 dark:text-white text-nowrap">My Dashboard</span>
     </div>
 
-    <div class="profile">
-      <img
-        src="https://i.pravatar.cc/150?img=3"
-        alt="User"
-        class="avatar"
-      />
-      <span class="name text-gray-900 dark:text-white">John Doe</span>
-      <span class="role text-gray-400">Admin</span>
-    </div>
-
-    <nav>
-      <router-link to="/dashboard" class="nav-link" active-class="router-link-active">
-        <i class="pi pi-home"></i> Dashboard
-      </router-link>
-      <router-link to="/users" class="nav-link" active-class="router-link-active">
-        <i class="pi pi-users"></i> Users
-      </router-link>
-      <router-link to="/reports" class="nav-link" active-class="router-link-active">
-        <i class="pi pi-chart-line"></i> Reports
-      </router-link>
-      <router-link to="/settings" class="nav-link" active-class="router-link-active">
-        <i class="pi pi-cog"></i> Settings
-      </router-link>
+    <nav class="flex flex-col gap-2 flex-1">
+      <template v-for="menu in adminMenus">
+        <div v-if="menu.children" :key="menu.name">
+          <button @click="toggleMenu(menu.name)" type="button"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-200 transition group relative font-medium w-full focus:outline-none"
+            :class="{
+              'bg-brand/10 dark:bg-brand/20 shadow-lg border-l-4 border-brand text-brand dark:text-brand': isMenuOpen(menu.name),
+              'hover:bg-brand/5 dark:hover:bg-brand/10 hover:text-brand': !isMenuOpen(menu.name)
+            }"
+          >
+            <i :class="[menu.icon, 'text-base', isMenuOpen(menu.name) ? 'text-brand' : 'text-gray-400 group-hover:text-brand transition']"></i>
+            <span class="text-sm text-nowrap" >{{ menu.name }}</span>
+            <i class="pi pi-chevron-down ml-auto transition-transform duration-200" :class="{ 'rotate-180': isMenuOpen(menu.name) }"></i>
+          </button>
+          <div v-if="isMenuOpen(menu.name)" class="pl-8 flex flex-col gap-1 mt-1">
+            <router-link
+              v-for="child in menu.children"
+              :key="child.name"
+              :to="child.to"
+              class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 transition group font-medium"
+              :class="{
+                'bg-brand/10 dark:bg-brand/20 border-l-4 border-brand text-brand dark:text-brand': $route.path === child.to,
+                'hover:bg-brand/5 dark:hover:bg-brand/10 hover:text-brand': $route.path !== child.to
+              }"
+            >
+              <i :class="[child.icon, 'text-base', $route.path === child.to ? 'text-brand' : 'text-gray-400 group-hover:text-brand transition']"></i>
+              <span class="text-sm text-nowrap">{{ child.name }}</span>
+            </router-link>
+          </div>
+        </div>
+        <router-link
+          v-else
+          :key="menu.to"
+          :to="menu.to"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-200 transition group relative font-medium"
+          :class="{
+            'bg-brand/10 dark:bg-brand/20 shadow-lg border-l-4 border-brand text-brand dark:text-brand': $route.path === menu.to,
+            'hover:bg-brand/5 dark:hover:bg-brand/10 hover:text-brand': $route.path !== menu.to
+          }"
+        >
+          <i :class="[menu.icon, 'text-base', $route.path === menu.to ? 'text-brand' : 'text-gray-400 group-hover:text-brand transition']"></i>
+          <span class="text-sm text-nowrap">{{ menu.name }}</span>
+        </router-link>
+      </template>
     </nav>
+
+    <button @click="$emit('request-logout')" class="mt-8 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-brand text-white font-semibold shadow hover:bg-brand/80 transition text-sm text-nowrap">
+      <i class="pi pi-sign-out text-lg"></i>
+      Logout
+    </button>
   </aside>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 defineProps({ open: Boolean });
-</script>
+import {adminMenus} from "@/utils/constants.js"
 
-<style scoped>
-.sidebar {
-  @apply w-64 flex-shrink-0 flex flex-col py-6 px-5 fixed md:sticky top-0 h-screen z-30 transition-transform duration-300 -translate-x-full md:translate-x-0;
+const openMenus = ref([]);
+function toggleMenu(name) {
+  if (openMenus.value.includes(name)) {
+    openMenus.value = openMenus.value.filter(n => n !== name);
+  } else {
+    openMenus.value.push(name);
+  }
 }
-.sidebar.open {
-  @apply translate-x-0;
+function isMenuOpen(name) {
+  return openMenus.value.includes(name);
 }
-.brand {
-  @apply flex items-center gap-3 mb-8;
-}
-.profile {
-  @apply flex flex-col items-center mb-10;
-}
-.avatar {
-  @apply w-20 h-20 rounded-full border-4 border-indigo-400 mb-2;
-}
-.name {
-  @apply font-semibold text-lg;
-}
-.role {
-  @apply text-xs;
-}
-.nav-link {
-  @apply flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition dark:text-gray-200 dark:hover:bg-white/10;
-}
-.router-link-active {
-  @apply bg-indigo-100 text-indigo-600 shadow-lg shadow-indigo-500/10 dark:bg-indigo-500 dark:text-white dark:shadow-indigo-500/40;
-}
-</style>
+</script>

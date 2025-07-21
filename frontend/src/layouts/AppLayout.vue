@@ -1,5 +1,5 @@
 <template>
-  <div class="AppLayout min-h-screen flex">
+  <div class="AppLayout min-h-screen flex bg-gray-50 dark:bg-dark-bg">
     <Sidebar :open="sidebarOpen" />
     <div class="flex-1 flex flex-col min-h-screen">
       <TopNav @toggle-sidebar="sidebarOpen = !sidebarOpen" />

@@ -1,6 +1,6 @@
 <!-- TopNav.vue -->
 <template>
-  <header class="top-nav bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-white/10">
+  <header class="top-nav bg-white border-b border-gray-200 dark:bg-dark-bg dark:border-white/10">
     <div class="left">
       <button
         class="md:hidden text-gray-900 dark:text-white focus:outline-none"
@@ -12,6 +12,10 @@
     </div>
 
     <div class="right">
+      <button class="icon-btn" @click="toggleDarkMode" :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
+        <i v-if="isDark" class="pi pi-sun"></i>
+        <i v-else class="pi pi-moon"></i>
+      </button>
       <button class="icon-btn">
         <i class="pi pi-bell"></i>
         <span class="badge">3</span>
@@ -39,10 +43,13 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/store/useUserStore';
+import { useDarkMode } from '@/store/useDarkMode';
 
 const userStore = useUserStore();
 const router = useRouter();
 const menuOpen = ref(false);
+
+const { isDark, toggleDarkMode } = useDarkMode();
 
 const logout = async () => {
   menuOpen.value = false;

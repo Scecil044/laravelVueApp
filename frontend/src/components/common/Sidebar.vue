@@ -4,7 +4,7 @@
     :class="[
       'sidebar',
       open && 'open',
-      'bg-white border-r border-gray-200 dark:bg-gray-900 dark:border-white/10'
+      'bg-white border-r border-gray-200 dark:bg-dark-bg dark:border-white/10'
     ]"
   >
     <div class="brand">

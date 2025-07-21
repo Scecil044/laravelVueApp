@@ -12,6 +12,7 @@ import AuthLayout from "@/layouts/AuthLayout.vue";
 import AppLayout from "@/layouts/AppLayout.vue";
 import NotFound from "@/views/NotFound.vue";
 import Support from "@/views/support/Support.vue";
+import Settings from "@/views/settings/Settings.vue";
 
 import { useUserStore } from "@/store/useUserStore";
 
@@ -54,6 +55,11 @@ const routes = [
         path: "support",
         name: "Support",
         component: Support
+      },
+      {
+        path: "settings",
+        name: "Settings",
+        component: Settings
       },
       {
         path: "user/:id",

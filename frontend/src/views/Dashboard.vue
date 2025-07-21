@@ -58,7 +58,7 @@
         </div>
         <!-- Sales Overview Chart -->
         <div class="chart-card">
-          <h2 class="section-title">Sales Overview</h2>
+      <h2 class="section-title">Sales Overview</h2>
           <Bar :data="barChartData" :options="barChartOptions" />
         </div>
         <!-- Cash Flow Trend -->

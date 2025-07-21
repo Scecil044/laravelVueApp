@@ -12,6 +12,9 @@ export default {
         'dark-bg': '#18181b',
         'brand': '#dd0531',
       },
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+      },
     },
   },
   plugins: [],

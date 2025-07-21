@@ -11,6 +11,7 @@ import GuestLayout from "@/layouts/GuestLayout.vue";
 import AuthLayout from "@/layouts/AuthLayout.vue";
 import AppLayout from "@/layouts/AppLayout.vue";
 import NotFound from "@/views/NotFound.vue";
+import Support from "@/views/support/Support.vue";
 
 import { useUserStore } from "@/store/useUserStore";
 
@@ -48,6 +49,11 @@ const routes = [
         path: "users",
         name: "Users",
         component: Users
+      },
+      {
+        path: "support",
+        name: "Support",
+        component: Support
       },
       {
         path: "user/:id",

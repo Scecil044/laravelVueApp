@@ -14,7 +14,7 @@ export const useUserStore = defineStore("user", {
         const response = await axios.post("/auth/login", credentials);
         if (response.data && response.data.user && response.data.authToken) {
           this.user = response.data.user;
-          this.authToken = response.data.token;
+          this.authToken = response.data.authToken;
           this.isAuthenticated = true;
           this.headers = {
             Authorization: `Bearer ${this.authToken}`,
@@ -40,7 +40,7 @@ export const useUserStore = defineStore("user", {
         const response = await axios.post("/auth/register", userData);
         if (response.data && response.data.user) {
           this.user = response.data.user;
-          this.authToken = response.data.token || null;
+          this.authToken = response.data.authToken || null;
           this.isAuthenticated = true;
           this.headers = this.authToken
             ? { Authorization: `Bearer ${this.authToken}` }
@@ -79,15 +79,11 @@ export const useUserStore = defineStore("user", {
           headers: this.headers,
         });
         if (response.data && response.data.user) {
-          this.user = response.data.user;
-          this.isAuthenticated = true;
-        } else {
-          this.user = null;
-          this.isAuthenticated = false;
-        }
+          return response.data
+        } 
       } catch (error) {
-        this.user = null;
-        this.isAuthenticated = false;
+        console.error("Fetch user failed:", error);
+        throw error;
       }
     },
   },

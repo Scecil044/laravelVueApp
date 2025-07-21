@@ -1,13 +1,24 @@
 <template>
-  <div class="AppLayout min-h-screen">
-    <RouterView />
+  <div class="AppLayout min-h-screen flex">
+    <Sidebar :open="sidebarOpen" />
+    <div class="flex-1 flex flex-col min-h-screen">
+      <TopNav @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+      <main class="flex-1">
+        <RouterView />
+      </main>
+    </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { RouterView } from "vue-router";
+import Sidebar from '@/components/common/Sidebar.vue';
+import TopNav from '@/components/common/TopNav.vue';
+
+const sidebarOpen = ref(false);
 </script>
 
 <style scoped>
-/* Your styles here */
+/* You can add layout-specific styles here */
 </style>

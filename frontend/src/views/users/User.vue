@@ -1,6 +1,6 @@
 <template>
-  <div class="User">
-    user
+  <div class="User min-h-screen">
+    user{{ formData }}
   </div>
 </template>
 

@@ -1,37 +1,24 @@
 <!-- Dashboard.vue -->
 <template>
-  <div class="app-wrapper">
-    <TopNav @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-    <div class="flex flex-1">
-      <Sidebar :open="sidebarOpen" />
-      <main class="main-panel">
-        <!-- KPI Cards -->
-        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div
-            v-for="(c, i) in cards"
-            :key="i"
-            class="kpi-card"
-          >
-            <h3>{{ c.title }}</h3>
-            <p class="value">{{ c.value }}</p>
-            <span class="subtitle">{{ c.subtitle }}</span>
-          </div>
-        </section>
-
-        <!-- Chart -->
-        <section class="chart-card">
-          <h2 class="section-title">Sales Overview</h2>
-          <Bar :data="chartData" :options="chartOptions" />
-        </section>
-      </main>
-    </div>
+  <div class="main-panel">
+    <!-- KPI Cards -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div v-for="(c, i) in cards" :key="i" class="kpi-card">
+        <h3>{{ c.title }}</h3>
+        <p class="value">{{ c.value }}</p>
+        <span class="subtitle">{{ c.subtitle }}</span>
+      </div>
+    </section>
+    <!-- Chart -->
+    <section class="chart-card">
+      <h2 class="section-title">Sales Overview</h2>
+      <Bar :data="chartData" :options="chartOptions" />
+    </section>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import Sidebar from '@/components/common/Sidebar.vue';
-import TopNav from '@/components/common/TopNav.vue';
 import { Bar } from 'vue-chartjs';
 import {
   Chart as ChartJS,
@@ -43,8 +30,6 @@ import {
   LinearScale
 } from 'chart.js';
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
-
-const sidebarOpen = ref(false);
 
 const cards = ref([
   { title: 'Users', value: '1 200', subtitle: 'Active this month' },
@@ -76,9 +61,6 @@ const chartOptions = ref({
 </script>
 
 <style scoped>
-.app-wrapper {
-  @apply flex flex-col min-h-screen bg-gradient-to-br from-slate-900 via-gray-900 to-black;
-}
 .main-panel {
   @apply flex-1 p-6 lg:p-8 overflow-y-auto;
 }

@@ -10,6 +10,7 @@ import Users from "@/views/users/Users.vue";
 import GuestLayout from "@/layouts/GuestLayout.vue";
 import AuthLayout from "@/layouts/AuthLayout.vue";
 import AppLayout from "@/layouts/AppLayout.vue";
+import NotFound from "@/views/NotFound.vue";
 
 import { useUserStore } from "@/store/useUserStore";
 
@@ -24,6 +25,11 @@ const routes = [
         path: "",
         name: "Home",
         component: Home
+      },
+      {
+        path: ":pathMatch(.*)*",
+        name: "NotFound",
+        component: NotFound
       }
     ]
   },
@@ -47,6 +53,11 @@ const routes = [
         path: "user/:id",
         name: "User",
         component: User
+      },
+      {
+        path: ":pathMatch(.*)*",
+        name: "NotFound",
+        component: NotFound
       }
     ]
   },
@@ -80,6 +91,11 @@ const routes = [
         name: "ResetPassword",
         meta: { requiresAuth: false, guestOnly: true },
         component: ResetPassword
+      },
+      {
+        path: ":pathMatch(.*)*",
+        name: "NotFound",
+        component: NotFound
       }
     ]
   }

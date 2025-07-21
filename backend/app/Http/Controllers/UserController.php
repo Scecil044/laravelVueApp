@@ -1,4 +1,4 @@
-what is<?php
+<?php
 
 namespace App\Http\Controllers;
 
@@ -25,7 +25,7 @@ class UserController extends Controller
     {
         try {
             $user = User::with('role')->findOrFail($id);
-            return response()->json(['data' => $user], 200);
+            return response()->json(['user' => $user], 200);
         } catch (\Exception $e) {
             return response()->json(['error' => 'User not found', 'message' => $e->getMessage()], 404);
         }

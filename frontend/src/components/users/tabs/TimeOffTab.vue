@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-8">
+  <div class="space-y-8 pl-5">
     <div>
       <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">Leave Balances</h3>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">

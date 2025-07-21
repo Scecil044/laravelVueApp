@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="space-y-6 pl-5">
     <div class="flex justify-between items-center mb-4">
       <h3 class="font-bold text-lg text-gray-900 dark:text-white">Documents</h3>
       <label class="px-4 py-2 rounded-lg bg-brand text-white font-semibold shadow hover:bg-brand/80 transition text-sm cursor-pointer">

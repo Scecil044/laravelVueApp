@@ -18,7 +18,7 @@
     <!-- User Details -->
     <div v-if="showDetails" class="flex-1 flex flex-col h-[60vh] md:h-auto bg-white/80 dark:bg-dark-bg/80">
       <UserDetailsHeader :user="selectedUser" @edit="editMode = true" />
-      <div class="px-4 pt-4 flex flex-col">
+      <div v-if="selectedUser" class="px-4 pt-4 flex flex-col">
         <TabNavigation :tabs="tabs" v-model="activeTab" />
         <div class="mt-4">
           <component :is="tabComponents[activeTab]" :user="selectedUser" :editMode="editMode" @save="editMode = false" />

@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-8">
+  <div class="space-y-8 pl-5">
     <div>
       <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">Performance Reviews</h3>
       <div v-if="reviews.length === 0" class="text-gray-400 dark:text-gray-500">No reviews yet.</div>

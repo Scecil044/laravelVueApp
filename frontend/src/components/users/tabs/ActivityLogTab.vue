@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-6">
+  <div class="space-y-6 pl-5">
     <h3 class="font-bold text-lg text-gray-900 dark:text-white mb-2">Activity Log</h3>
     <div v-if="logs.length === 0" class="text-gray-400 dark:text-gray-500">No activity yet.</div>
     <ul v-else class="space-y-3">

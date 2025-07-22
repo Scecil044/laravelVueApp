@@ -15,6 +15,7 @@ import Support from "@/views/support/Support.vue";
 import Settings from "@/views/settings/Settings.vue";
 import Payroll from "@/views/hr/Payroll.vue";
 import Requests from "@/views/hr/Requests.vue";
+import Careers from "@/views/careers/Careers.vue";
 
 import { useUserStore } from "@/store/useUserStore";
 
@@ -57,6 +58,11 @@ const routes = [
         path: "support",
         name: "Support",
         component: Support
+      },
+      {
+        path: "careers",
+        name: "Careers",
+        component: Careers
       },
       {
         path: "payroll",

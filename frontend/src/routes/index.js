@@ -13,6 +13,8 @@ import AppLayout from "@/layouts/AppLayout.vue";
 import NotFound from "@/views/NotFound.vue";
 import Support from "@/views/support/Support.vue";
 import Settings from "@/views/settings/Settings.vue";
+import Payroll from "@/views/hr/Payroll.vue";
+import Requests from "@/views/hr/Requests.vue";
 
 import { useUserStore } from "@/store/useUserStore";
 
@@ -55,6 +57,16 @@ const routes = [
         path: "support",
         name: "Support",
         component: Support
+      },
+      {
+        path: "payroll",
+        name: "Payroll",
+        component: Payroll
+      },
+      {
+        path: "requests",
+        name: "Requests",
+        component: Requests
       },
       {
         path: "settings",

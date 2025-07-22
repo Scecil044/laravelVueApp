@@ -10,6 +10,7 @@
       <div class="text-sm text-gray-500 dark:text-gray-300 mt-1">{{ user.jobTitle || '-' }} <span v-if="user.department">• {{ user.department }}</span></div>
     </div>
     <button @click="$emit('edit')" class="mt-4 md:mt-0 px-6 py-2 rounded-lg bg-brand text-white font-semibold shadow hover:bg-brand/80 transition text-sm">Edit</button>
+    
   </div>
   <div v-else class="p-6 text-center text-gray-400 dark:text-gray-500">No user selected.</div>
 </template>

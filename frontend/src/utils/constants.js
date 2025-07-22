@@ -40,6 +40,23 @@ const adminMenus =[
         to: "/app/support"
     },
     {
+        name: "HR",
+        icon: "pi pi-users",
+        chevron: true,
+        children: [
+            {
+                name: "Requests",
+                icon: "pi pi-paper-plane",
+                to: "/app/requests"
+            },
+            {
+                name: "Payroll",
+                icon: "pi pi-dollar-sign",
+                to: "/app/payroll"
+            }
+        ]
+    },
+    {
         name: "Configurations",
         icon: "pi pi-sliders-h",
         chevron: true,
@@ -55,7 +72,7 @@ const adminMenus =[
                 to: "/app/configurations/roles-permissions"
             }
         ]
-    }
+    },
 ]
 
 export {adminMenus }

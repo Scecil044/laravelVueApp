@@ -3,7 +3,7 @@
     <!-- Sidebar Tabs -->
     <div :class="[collapsed ? 'w-16' : 'w-full md:w-56 lg:w-64', 'flex-shrink-0 transition-all duration-300']">
       <div class="flex items-center justify-between md:justify-end p-2 md:p-0">
-        <button @click="toggleCollapse" class="md:ml-auto p-2 rounded-lg bg-brand/10 dark:bg-brand/20 text-brand hover:bg-brand/20 dark:hover:bg-brand/30 transition flex items-center justify-center">
+        <button @click="toggleCollapse" class="md:ml-auto p-2 rounded-lg bg-brand/10 dark:bg-brand/20 text-brand hover:bg-brand/20 dark:hover:bg-brand/30 transition flex items-center justify-center ">
           <i :class="collapsed ? 'pi pi-angle-right' : 'pi pi-angle-left'"></i>
         </button>
       </div>

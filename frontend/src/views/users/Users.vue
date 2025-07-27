@@ -198,6 +198,7 @@ const tabs = [
   'Compensation',
   'Time Off',
   'Performance',
+  'Requests',
   'Activity Log'
 ];
 const tabComponents = {
@@ -209,6 +210,7 @@ const tabComponents = {
   'Time Off': defineAsyncComponent(() => import('@/components/users/tabs/TimeOffTab.vue')),
   Performance: defineAsyncComponent(() => import('@/components/users/tabs/PerformanceTab.vue')),
   'Activity Log': defineAsyncComponent(() => import('@/components/users/tabs/ActivityLogTab.vue')),
+  Requests: defineAsyncComponent(()=> import('@/components/users/tabs/RequestsTab.vue'))
 };
 const activeTab = ref('Profile');
 </script>

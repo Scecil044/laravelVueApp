@@ -1,7 +1,8 @@
 <template>
   <div class="w-full h-full flex flex-col md:flex-row bg-gray-50 dark:bg-dark-bg min-h-screen">
+    <AccentLoader v-if="isLoading" :message="'Loading users...'" :sub-message="'Please wait while we prepare your experience.'" :show-progress-bar="true" min-height="60vh" />
     <!-- User List -->
-    <div v-if="showList" class="w-full md:w-1/3 lg:w-1/4 h-[60vh] md:h-auto border-r border-gray-200 dark:border-white/10 flex-shrink-0 flex flex-col">
+    <div v-if="showList && !isLoading" class="w-full md:w-1/3 lg:w-1/4 h-[60vh] md:h-auto border-r border-gray-200 dark:border-white/10 flex-shrink-0 flex flex-col">
       <div class="p-4 border-b border-gray-100 dark:border-white/10 bg-white/80 dark:bg-dark-bg/80 flex items-center gap-2">
         <input v-model="search" type="text" placeholder="Search users..." class="w-full rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-white/10 text-gray-900 dark:text-gray-100 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-brand transition" />
         <button @click="showFilter = true" class="ml-2 p-2 rounded-lg bg-brand/10 dark:bg-brand/20 text-brand hover:bg-brand/20 dark:hover:bg-brand/30 transition flex items-center justify-center"><i class="pi pi-filter text-lg"></i></button>
@@ -25,13 +26,24 @@
       />
     </div>
     <!-- User Details -->
-    <div v-if="showDetails" class="flex-1 flex flex-col h-[60vh] md:h-auto bg-white/80 dark:bg-dark-bg/80">
+    <div v-if="showDetails && !isLoading" class="flex-1 flex flex-col h-[60vh] md:h-auto bg-white/80 dark:bg-dark-bg/80">
       <UserDetailsHeader :user="selectedUser" @edit="editMode = true" />
       <div v-if="selectedUser" class="px-4 pt-4 flex flex-col">
         <TabNavigation :tabs="tabs" v-model="activeTab" />
         <div class="mt-4">
           <component :is="tabComponents[activeTab]" :user="selectedUser" :editMode="editMode" @save="editMode = false" />
         </div>
+      </div>
+      <div v-else class="flex flex-col items-center justify-center flex-1 py-12 text-center text-gray-400 dark:text-gray-500">
+        <div class="mb-4">
+          <svg class="mx-auto w-16 h-16 text-brand/40 dark:text-brand/60" fill="none" viewBox="0 0 64 64" stroke="currentColor">
+            <circle cx="32" cy="32" r="30" stroke-width="2" class="opacity-20" />
+            <path d="M32 38c-6 0-12 3-12 7v3h24v-3c0-4-6-7-12-7z" stroke-width="2" />
+            <circle cx="32" cy="26" r="6" stroke-width="2" />
+          </svg>
+        </div>
+        <div class="text-xl font-semibold mb-2 text-brand">No user selected</div>
+        <div class="text-sm text-gray-400 dark:text-gray-500 max-w-xs mx-auto">Select a user from the list to view their details, profile, and activity. You can search or filter users on the left.</div>
       </div>
       <button v-if="isMobile" class="md:hidden absolute left-2 top-2 text-2xl text-brand p-2" @click="backToList">
         <i class="pi pi-arrow-left"></i>
@@ -41,11 +53,12 @@
 </template>
 
 <script setup>
-import { ref, computed, defineAsyncComponent } from 'vue';
+import { ref, computed, defineAsyncComponent, onMounted } from 'vue';
 import UserListItem from '@/components/users/UserListItem.vue';
 import UserDetailsHeader from '@/components/users/UserDetailsHeader.vue';
 import TabNavigation from '@/components/users/TabNavigation.vue';
 import FilterModal from '@/components/users/FilterModal.vue';
+import AccentLoader from '@/components/common/AccentLoader.vue';
 
 const users = ref([
   {
@@ -142,6 +155,17 @@ const editMode = ref(false);
 const isMobile = ref(window.innerWidth < 768);
 const showFilter = ref(false);
 const filters = ref({ status: '', department: '', employmentType: '', onLeave: false, sortBy: '' });
+
+// Loader state
+const isLoading = ref(false);
+
+// Simulate loading users on mount
+onMounted(() => {
+  isLoading.value = true;
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 1800);
+});
 
 const departments = computed(() => {
   const set = new Set(users.value.map(u => u.department).filter(Boolean));

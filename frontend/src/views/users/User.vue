@@ -1,6 +1,9 @@
 <template>
-  <div class="User min-h-screen">
-    user{{ formData }}
+  <div class="User min-h-screen flex items-center justify-center">
+    <AccentLoader v-if="isLoading" :message="'Loading user...'" :sub-message="'Fetching user details, please wait.'" :show-progress-bar="true" min-height="40vh" />
+    <div v-else>
+      user{{ formData }}
+    </div>
   </div>
 </template>
 
@@ -8,6 +11,7 @@
 import {ref, onMounted} from "vue";
 import { useUserStore } from "@/store/useUserStore";
 import { useRoute } from "vue-router";
+import AccentLoader from '@/components/common/AccentLoader.vue';
 
 const route = useRoute();
 
@@ -20,9 +24,11 @@ const userStore = useUserStore()
 const fetchUserById = async()=>{
   try{
     isLoading.value = true;
+    // Simulate API call delay for loader demo
+    await new Promise(r => setTimeout(r, 1800));
     const userData = await userStore.fetchUser({userId: userId.value});
     if (userData && typeof userData === 'object'){
-      isLoading.value = true;
+      isLoading.value = false;
       formData.value = userData;
     } else {
       isLoading.value = false;
@@ -31,7 +37,7 @@ const fetchUserById = async()=>{
       },1500);
     }
   }catch(error){
-    isLoading.value = true;
+    isLoading.value = false;
     console.error("Error fetching user:", error);
   }
 }

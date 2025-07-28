@@ -29,7 +29,7 @@
         />
         <Transition name="pop">
           <div v-if="menuOpen" class="dropdown bg-white border border-gray-200 shadow-lg text-gray-900 dark:bg-gray-800 dark:border-white/20 dark:shadow-xl dark:text-gray-200">
-            <router-link :to="{ name: 'User', params: { id: userStore.user?.id } }"><i class="pi pi-user"></i> Profile</router-link>
+            <router-link :to="{ name: 'User', params: { id: userStore.user?._id } }"><i class="pi pi-user"></i> Profile</router-link>
             <a href="#"><i class="pi pi-cog"></i> Settings</a>
             <a href="#" @click="logout"><i class="pi pi-sign-out"></i> Logout</a>
           </div>
